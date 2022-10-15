@@ -6,15 +6,16 @@ class BankAccount(ABC):
         self.name = name
         self.balance = balance
 
-    def deposit(self):
-        amount = int(input("please enter amount to deposit: \n>"))
+    def deposit(self, amount: int):
+        amount = int(amount)
         self.balance += amount
         print(
             "\n amount deposited= " + str(amount) + "\nyour balance= " + str(self.balance)
         )
+        return self.balance
 
-    def withdraw(self):
-        amount = int(input("please enter amount to withdraw: \n>"))
+    def withdraw(self, amount: int):
+        amount = int(amount)
         if self.balance < amount:
             print("Not enough balance")
         else:
@@ -25,9 +26,9 @@ class BankAccount(ABC):
                 + str(self.balance)
             )
             self.balance -= amount
+        return self.balance
 
-    def calculate_income_tax(self):
-        income = int(input("please enter your yearly income: \n>"))
+    def calculate_income_tax(self, income):
         if income <= 5000:
             tax = 0
         elif income <= 10000:
@@ -41,15 +42,16 @@ class BankAccount(ABC):
         else:
             tax = (income - 1000000) * 0.30
         print("your annual income tax in jordan is", tax, "JODS")
+        return tax
 
     def get_balance(self):
         return self.balance
 
     def __str__(self) -> str:
-        return "name: " + self.name + " balance: " + self.balance
+        return "name: " + self.name + " - balance: " + str(self.balance)
 
 
-class saving_account(BankAccount):
+class Saving_account(BankAccount):
     def __init__(self, name, balance=0):
         super().__init__(name, balance)
 
@@ -57,7 +59,7 @@ class saving_account(BankAccount):
         return super().__str__()
 
 
-class running_account(BankAccount):
+class Running_account(BankAccount):
     def __init__(self, name, balance=0):
         super().__init__(name, balance)
 
@@ -93,10 +95,13 @@ def services(account: BankAccount):
         )
         service = input("Enter service \n>").lower()
         if service == "withdraw" or service == "1":
+            amount = int(input("please enter amount to withdraw: \n>"))
             account.withdraw()
         elif service == "deposit" or service == "2":
-            account.deposit()
+            amount = int(input("please enter amount to deposit: \n>"))
+            account.deposit(amount)
         elif service == "calculate income tax" or service == "3":
+            income = int(input("please enter your yearly income: \n>"))
             account.calculate_income_tax()
         elif service == "view balance" or service == "4":
             print("balance: " + account.get_balance())
@@ -125,6 +130,6 @@ if __name__ == "__main__":
     welcome()
     username = input("please enter your name: \n >")
     balance = int(input("please enter your balance: \n >"))
-    user_account = running_account(username, balance)
+    user_account = Running_account(username, balance)
     services(user_account)
     goodbye()
